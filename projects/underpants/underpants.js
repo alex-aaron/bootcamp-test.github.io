@@ -78,11 +78,21 @@ _.typeOf = function(value) {
 */
 
 _.first = function(arr, num) {
+    var outputArr = [];
     if (!Array.isArray(arr)) {
         return [];
-    } else if (num === null || null === undefined) {
+    } else if (num === undefined || typeof num !== "number") {
         return arr[0];
+    } else if (num > arr.length) {
+        return arr;
+    } else if (num === 1) {
+        return arr[0];
+    } else {
+        for (var i = 0; i < num; i++) {
+            outputArr.push(arr[i]);
+        }
     }
+    return outputArr;
 }
 
 
@@ -121,6 +131,14 @@ _.first = function(arr, num) {
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
 
+_.indexOf = function(arr, value) {
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === value) {
+            return i;
+        } 
+    }
+    return -1;
+}
 
 /** _.contains
 * Arguments:
@@ -137,7 +155,14 @@ _.first = function(arr, num) {
 *   _.contains([1,"two", 3.14], "two") -> true
 */
 
-
+_.contains = function(arr, value) {
+    var containsValue = false;
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] === value ? containsValue = true : containsValue;
+    }
+    return containsValue;
+}
+ 
 /** _.each
 * Arguments:
 *   1) A collection
@@ -155,7 +180,15 @@ _.first = function(arr, num) {
 */
 
 _.each = function(collection, func) {
-    // 
+    if (Array.isArray(collection)) {
+        for (var i = 0; i < collection.length; i++) {
+            func(collection[i], i, collection);
+        }
+    } else {
+        for (var key in collection) {
+            func(collection[key], key, collection);
+        }
+    }
 }
 
 /** _.unique
@@ -167,6 +200,16 @@ _.each = function(collection, func) {
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
+
+_.unique = function(array) {
+    var uniqueArr = [];
+    for (var i = 0; i < array.length; i++) {
+        if (_.indexOf(uniqueArr, array[i]) === -1) {
+            uniqueArr.push(array[i]);
+        }
+    }
+    return uniqueArr;
+}
 
 
 /** _.filter
@@ -185,6 +228,16 @@ _.each = function(collection, func) {
 *   use _.each in your implementation
 */
 
+_.filter = function(arr, func) {
+    var filteredArr = [];
+    for (var i = 0; i < arr.length; i++) {
+        if (func(arr[i], i, arr)) {
+            filteredArr.push(arr[i]);
+        }
+    }
+    return filteredArr;
+}
+
 
 /** _.reject
 * Arguments:
@@ -199,6 +252,9 @@ _.each = function(collection, func) {
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
 
+_.reject = function(arr, func) {
+
+}
 
 /** _.partition
 * Arguments:
@@ -236,6 +292,19 @@ _.each = function(collection, func) {
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
 
+_.map = function(collection, func) {
+    var mappedArr = [];
+    if (Array.isArray(collection)) {
+        for (var i = 0; i < collection.length; i++) {
+            mappedArr.push(func(collection[i], i, collection));
+        }
+    } else {
+        for (var key in collection) {
+            mappedArr.push(func(collection[key], key, collection));
+        }
+    }
+    return mappedArr;
+}
 
 /** _.pluck
 * Arguments:
@@ -269,6 +338,37 @@ _.each = function(collection, func) {
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
+
+_.every = function(arr, func) {
+    if (func === undefined) {
+        if (Array.isArray(collection))
+    }
+    if (Array.isArray(arr)) {
+        for (var i = 0; i < arr.length; i++) {
+            if (func === undefined) {
+                if (arr[i] !== true) {
+                    return false;
+                }
+            }
+            else if (func(arr[i], i, arr) !== true) {
+                return false;
+            }
+        }
+        return true;
+    } else {
+        for (var key in arr) {
+            if (func === undefined) {
+                if (arr[key] !== true) {
+                    return false
+                }
+            }
+            else if (func(arr[key], key, arr) !== true) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 
 
 /** _.some
@@ -311,6 +411,21 @@ _.each = function(collection, func) {
 * Examples:
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
+
+
+_.reduce = function(array, func, seed) {
+    if (seed === undefined) {
+        seed = array[0];
+        for (var i = 1; i < array.length; i++) {
+            seed = func(seed, array[i], i);
+        }
+    } else {
+        for (var i = 0; i < array.length; i++) {
+            seed = func(seed, array[i], i);
+        }
+    }
+    return seed;
+}
 
 
 /** _.extend
